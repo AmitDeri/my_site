@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amit Deri</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="header" id="header">
-        <h1>Amit Deri</h1>
+        <img src="20250208_112002.jpg" alt="Amit Deri" class="profile-pic" id="profile-pic">
+        <h1 id="name">Amit Deri</h1>
         <h2>Computer Science Graduate</h2>
         <div class="links">
             <a href="mailto:amit.derri@gmail.com" title="Email Me">
@@ -30,10 +31,16 @@
     <script>
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
+            const profilePic = document.getElementById('profile-pic');
+            const name = document.getElementById('name');
             if (window.scrollY > 50) {
                 header.classList.add('shrink');
+                profilePic.classList.add('shrink-pic');
+                name.classList.add('shrink-name');
             } else {
                 header.classList.remove('shrink');
+                profilePic.classList.remove('shrink-pic');
+                name.classList.remove('shrink-name');
             }
         });
     </script>
