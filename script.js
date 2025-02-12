@@ -9,7 +9,38 @@ document.addEventListener('DOMContentLoaded', function () {
     // Variables for mobile scrolling
     let nameFixed = false;
 
-    // Scroll event for shrinking header
+    // Function to set initial styles based on screen width
+    function setInitialStyles() {
+        if (window.innerWidth >= 768) {
+            // Desktop styles
+            header.classList.remove('shrink');
+            profileImage.style.opacity = '1';
+            profileImage.style.transform = 'none';
+            title.style.opacity = '1';
+            links.style.opacity = '1';
+            nameElement.classList.remove('name-fixed');
+            nameElement.style.color = '';
+            nameFixed = false;
+        } else {
+            // Mobile styles
+            header.classList.remove('shrink');
+            profileImage.style.opacity = '1';
+            profileImage.style.transform = 'none';
+            title.style.opacity = '1';
+            links.style.opacity = '1';
+            nameElement.classList.remove('name-fixed');
+            nameElement.style.color = '';
+            nameFixed = false;
+        }
+    }
+
+    // Run on page load
+    setInitialStyles();
+
+    // Run on window resize
+    window.addEventListener('resize', setInitialStyles);
+
+    // Scroll event for shrinking header on desktop only
     window.addEventListener('scroll', function () {
         let offset = window.pageYOffset;
 
@@ -22,27 +53,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // Additional scroll effects for desktop can be added here
-        } else {
-            // On mobile devices, avoid applying transformations during scroll
-            // Reset styles if necessary
-            header.classList.remove('shrink');
-            profileImage.style.opacity = '1';
-            profileImage.style.transform = 'none';
-            title.style.opacity = '1';
-            links.style.opacity = '1';
-            nameElement.classList.remove('name-fixed');
-            nameElement.style.color = '';
-            nameFixed = false;
         }
+        // No need to handle scroll events for mobile devices here
     });
 
     // Intersection Observer for fade-in effect
     const options = {
-        threshold: 0.1
+        threshold: 0.1,
     };
 
     const observer = new IntersectionObserver(function (entries, observer) {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
             if (entry.isIntersecting) {
                 entry.target.style.animationPlayState = 'running';
                 observer.unobserve(entry.target);
@@ -50,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }, options);
 
-    fadeElements.forEach(element => {
+    fadeElements.forEach((element) => {
         observer.observe(element);
     });
 });
