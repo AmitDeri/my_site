@@ -43,15 +43,15 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: all 0.5s ease;
 }
 
 .profile img {
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    transition: all 0.5s ease;
     object-fit: cover;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    will-change: transform, opacity;
 }
 
 .header.shrink .profile img {
@@ -74,27 +74,30 @@ img {
     font-size: 2.5em;
     color: #2d3436;
     transition: all 0.5s ease;
+    will-change: font-size, color;
 }
 
 .header.shrink #name {
     font-size: 1.8em;
 }
 
-#title {
+.title {
     font-size: 1.5em;
     color: #636e72;
     margin-top: 10px;
-    transition: all 0.5s ease;
+    transition: opacity 0.3s ease-out;
+    will-change: opacity;
 }
 
-.header.shrink #title {
+.header.shrink .title {
     font-size: 1.2em;
 }
 
 .links {
     margin-top: 20px;
     opacity: 1;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.3s ease-out;
+    will-change: opacity;
 }
 
 .header.shrink .links {
@@ -130,7 +133,6 @@ img {
     text-align: center;
     background-color: #e9fcef; /* Very light green */
     color: #2d3436;
-    transition: all 0.5s ease;
 }
 
 .content h2, .content p {
@@ -180,11 +182,6 @@ img {
     transition: all 0.6s ease;
 }
 
-/* Parallax Effect */
-#profile-image {
-    will-change: transform;
-}
-
 /* Name Styling for Mobile */
 .name-fixed {
     position: fixed;
@@ -197,8 +194,9 @@ img {
     text-align: center;
     font-size: 1.8em;
     opacity: 1;
-    transition: all 0.5s ease;
     z-index: 10;
+    transition: all 0.5s ease;
+    will-change: transform, opacity;
 }
 
 /* Media Queries */
@@ -233,7 +231,7 @@ img {
         font-size: 3.5em;
     }
 
-    #title {
+    .title {
         font-size: 2em;
     }
 
@@ -241,7 +239,7 @@ img {
         font-size: 2.5em;
     }
 
-    .header.shrink #title {
+    .header.shrink .title {
         font-size: 1.8em;
     }
 
