@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const header = document.getElementById('header');
     const profileImage = document.getElementById('profile-image');
-    const title = document.getElementById('title');
+    const titles = document.querySelectorAll('.title'); // Select all elements with class "title"
     const links = document.getElementById('links');
     const nameElement = document.getElementById('name');
     const fadeElements = document.querySelectorAll('.content h2, .content p');
@@ -25,11 +25,15 @@ document.addEventListener('DOMContentLoaded', function () {
             let totalHeight = document.body.scrollHeight - window.innerHeight;
             let fadeOutFactor = Math.min(offset / totalHeight, 1);
 
-            // Fade out profile image, links, and title
+            // Fade out profile image, links, and titles
             let opacityValue = Math.max(1 - fadeOutFactor * 3, 0); // Multiply by 3 for faster fade
             profileImage.style.opacity = opacityValue;
             links.style.opacity = opacityValue;
-            title.style.opacity = opacityValue;
+
+            // Loop through all titles and set opacity
+            titles.forEach(function(title) {
+                title.style.opacity = opacityValue;
+            });
 
             // Shrink the profile image
             let scale = Math.max(1 - offset / 500, 0.5);
@@ -49,8 +53,13 @@ document.addEventListener('DOMContentLoaded', function () {
             // Reset styles on desktop
             profileImage.style.opacity = '1';
             profileImage.style.transform = 'none';
-            title.style.opacity = '1';
             links.style.opacity = '1';
+
+            // Loop through all titles and reset opacity
+            titles.forEach(function(title) {
+                title.style.opacity = '1';
+            });
+
             nameElement.classList.remove('name-fixed');
             nameElement.style.color = '';
             nameFixed = false;
