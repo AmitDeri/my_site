@@ -4,7 +4,7 @@ body {
     margin: 0;
     overflow-x: hidden;
     scroll-behavior: smooth;
-    background-color: #f0f8ff; /* Light pastel blue background */
+    background-color: #e0f7e9; /* Light pastel green background */
 }
 
 h1, h2 {
@@ -30,7 +30,7 @@ img {
 .header {
     position: relative;
     width: 100%;
-    background-color: #e6f2ff; /* Pastel blue */
+    background-color: #d0f0fd; /* Baby blue pastel */
     transition: all 0.5s ease;
     overflow: hidden;
 }
@@ -65,25 +65,6 @@ img {
     z-index: 1;
 }
 
-#profile::before {
-    content: '';
-    position: absolute;
-    top: -20%;
-    left: -20%;
-    width: 140%;
-    height: 140%;
-    background: radial-gradient(circle at center, rgba(255, 182, 193, 0.3), transparent);
-    z-index: -1;
-    transition: all 0.5s ease;
-}
-
-.header.shrink #profile::before {
-    top: -10%;
-    left: -10%;
-    width: 120%;
-    height: 120%;
-}
-
 /* Info Styles */
 .info {
     text-align: center;
@@ -97,7 +78,7 @@ img {
 
 #name {
     font-size: 2.5em;
-    color: #333;
+    color: #2d3436;
     transition: all 0.5s ease;
 }
 
@@ -107,7 +88,7 @@ img {
 
 #title {
     font-size: 1.5em;
-    color: #666;
+    color: #636e72;
     margin-top: 10px;
     transition: all 0.5s ease;
 }
@@ -127,7 +108,7 @@ img {
 }
 
 .links a {
-    color: #333;
+    color: #2d3436;
     font-size: 1.5em;
     margin: 0 10px;
     display: inline-block;
@@ -153,14 +134,14 @@ img {
 .content {
     padding: 50px 20px;
     text-align: center;
-    background-color: #fff0f5; /* Lavender blush */
-    color: #333;
+    background-color: #e9fcef; /* Very light green */
+    color: #2d3436;
     transition: all 0.5s ease;
 }
 
 .content h2 {
     font-size: 2em;
-    color: #333;
+    color: #2d3436;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 1s forwards;
@@ -170,7 +151,7 @@ img {
     max-width: 800px;
     margin: 20px auto;
     line-height: 1.6;
-    color: #555;
+    color: #636e72;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 1s forwards;
@@ -181,14 +162,14 @@ img {
     display: inline-block;
     margin-top: 20px;
     padding: 12px 25px;
-    background: #ffb6c1; /* Light pink */
-    color: #333;
+    background: #a3e4d7; /* Pastel green */
+    color: #2d3436;
     border-radius: 5px;
     transition: background 0.3s, transform 0.3s;
 }
 
 .cv-button:hover {
-    background: #ff69b4; /* Hot pink */
+    background: #81d4b2; /* Slightly darker pastel green */
     transform: translateY(-3px);
 }
 
@@ -223,6 +204,22 @@ img {
     will-change: transform;
 }
 
+/* Name Styling for Mobile */
+.name-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #d0f0fd;
+    color: #2d3436;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 1.8em;
+    opacity: 1;
+    transition: all 0.5s ease;
+    z-index: 10;
+}
+
 /* Media Queries */
 @media (min-width: 768px) {
     .header .container {
@@ -237,13 +234,13 @@ img {
     }
 
     .profile img {
-        width: 300px;
-        height: 300px;
+        width: 500px;
+        height: 500px;
     }
 
     .header.shrink .profile img {
-        width: 150px;
-        height: 150px;
+        width: 250px;
+        height: 250px;
     }
 
     .info {
@@ -252,22 +249,21 @@ img {
     }
 
     #name {
-        font-size: 3em;
+        font-size: 3.5em;
     }
 
     #title {
-        font-size: 1.8em;
-    }
-
-    .header.shrink #name {
         font-size: 2em;
     }
 
-    .header.shrink #title {
-        font-size: 1.4em;
+    .header.shrink #name {
+        font-size: 2.5em;
     }
 
-    /* Align the About Me section next to the image */
+    .header.shrink #title {
+        font-size: 1.8em;
+    }
+
     main {
         display: flex;
         flex-direction: row;
