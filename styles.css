@@ -186,6 +186,26 @@ img {
     will-change: transform;
 }
 
+/* Ensure transitions are smooth */
+#profile-image,
+.title,
+#links {
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+/* Use will-change to optimize rendering */
+#profile-image {
+    will-change: transform, opacity;
+}
+
+.title {
+    will-change: opacity;
+}
+
+#links {
+    will-change: opacity;
+}
+
 /* Name Styling for Mobile */
 .name-fixed {
     position: fixed;
