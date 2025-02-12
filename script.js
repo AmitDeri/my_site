@@ -1,17 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
     const header = document.getElementById('header');
     const profileImage = document.getElementById('profile-image');
-    const titles = document.querySelectorAll('.title');
+    const title = document.getElementById('title');
     const links = document.getElementById('links');
     const nameElement = document.getElementById('name');
     const fadeElements = document.querySelectorAll('.content h2, .content p');
 
     // Variables for mobile scrolling
     let nameFixed = false;
-    let ticking = false;
 
-    // Scroll Event Handler
-    function onScroll() {
+    // Scroll event for shrinking header
+    window.addEventListener('scroll', function () {
         let offset = window.pageYOffset;
 
         if (offset > 50) {
@@ -20,84 +19,51 @@ document.addEventListener('DOMContentLoaded', function () {
             header.classList.remove('shrink');
         }
 
+        // Apply mobile scrolling effects
         if (window.innerWidth < 768) {
-            if (!ticking) {
-                window.requestAnimationFrame(function () {
-                    handleScrollEffects(offset);
-                    ticking = false;
-                });
-                ticking = true;
+            // Calculate fade-out factor based on scroll position
+            let totalHeight = document.body.scrollHeight - window.innerHeight;
+            let fadeOutFactor = Math.min(offset / totalHeight, 1);
+
+            // Fade out profile image, links, and title
+            let opacityValue = Math.max(1 - fadeOutFactor * 3, 0); // Multiply by 3 for faster fade
+            profileImage.style.opacity = opacityValue;
+            links.style.opacity = opacityValue;
+            title.style.opacity = opacityValue;
+
+            // Shrink the profile image
+            let scale = Math.max(1 - offset / 500, 0.5);
+            profileImage.style.transform = `translateY(${offset * 0.5}px) scale(${scale})`;
+
+            // Fix the name at the top when scrolling past the header
+            if (offset > header.offsetHeight && !nameFixed) {
+                nameElement.classList.add('name-fixed');
+                nameElement.style.color = '#2d3436'; // Darker color for fixed name
+                nameFixed = true;
+            } else if (offset <= header.offsetHeight && nameFixed) {
+                nameElement.classList.remove('name-fixed');
+                nameElement.style.color = ''; // Reset color
+                nameFixed = false;
             }
         } else {
             // Reset styles on desktop
-            resetStyles();
-        }
-    }
-
-    // Handle Scroll Effects on Mobile
-    function handleScrollEffects(offset) {
-        // Calculate fade-out threshold
-        const fadeStart = 0; // Start fading immediately
-        const fadeUntil = 300; // End fading at 300px scroll
-        let opacity = 1;
-
-        if (offset <= fadeStart) {
-            opacity = 1;
-        } else if (offset >= fadeUntil) {
-            opacity = 0;
-        } else {
-            opacity = 1 - (offset - fadeStart) / (fadeUntil - fadeStart);
-        }
-
-        // Apply opacity to elements
-        if (opacity < 0) opacity = 0;
-        profileImage.style.opacity = opacity;
-        links.style.opacity = opacity;
-        titles.forEach(function (title) {
-            title.style.opacity = opacity;
-        });
-
-        // Shrink the profile image
-        const scale = Math.max(1 - offset / 500, 0.5);
-        profileImage.style.transform = `scale(${scale})`;
-
-        // Fix the name at the top when scrolling past the header
-        if (offset > header.offsetHeight) {
-            if (!nameFixed) {
-                nameElement.classList.add('name-fixed');
-                nameFixed = true;
-            }
-        } else {
-            if (nameFixed) {
-                nameElement.classList.remove('name-fixed');
-                nameFixed = false;
-            }
-        }
-    }
-
-    // Reset Styles on Desktop
-    function resetStyles() {
-        profileImage.style.opacity = '1';
-        profileImage.style.transform = 'none';
-        links.style.opacity = '1';
-        titles.forEach(function (title) {
+            profileImage.style.opacity = '1';
+            profileImage.style.transform = 'none';
             title.style.opacity = '1';
-        });
-        if (nameFixed) {
+            links.style.opacity = '1';
             nameElement.classList.remove('name-fixed');
+            nameElement.style.color = '';
             nameFixed = false;
         }
-    }
-
-    window.addEventListener('scroll', onScroll);
+    });
 
     // Intersection Observer for fade-in effect
     const options = {
-        threshold: 0.1,
+        threshold: 0.1
     };
 
-    const observer = new IntersectionObserver(function (entries) {
-        entries.forEach((entry) => {
+    const observer = new IntersectionObserver(function (entries, observer) {
+        entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.style.animationPlayState = 'running';
                 observer.unobserve(entry.target);
@@ -105,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }, options);
 
-    fadeElements.forEach((element) => {
+    fadeElements.forEach(element => {
         observer.observe(element);
     });
 });
