@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4b6cb7, #182848);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        .cv-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #6a5acd;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .cv-button:hover {
+            background: #483d8b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="your-photo.jpg" alt="My Photo">
+        <h1>About Me</h1>
+        <p>I’m a Computer Science graduate with a strong passion for software development and cybersecurity. With experience in Java and Python, I enjoy building efficient and scalable applications while also exploring system vulnerabilities and secure coding practices.</p>
+        <p>I love tackling complex challenges with a structured and analytical approach, always eager to learn and grow in a dynamic, innovative environment. Technology excites me, and I'm always looking for opportunities to apply my skills and make an impact.</p>
+        <p>Feel free to reach out—I’d love to connect!</p>
+        <a href="your-cv.pdf" class="cv-button" download>Download My CV</a>
+    </div>
+</body>
+</html>
