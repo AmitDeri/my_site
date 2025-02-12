@@ -155,6 +155,7 @@ img {
     text-align: center;
     background-color: #fff0f5; /* Lavender blush */
     color: #333;
+    transition: all 0.5s ease;
 }
 
 .content h2 {
@@ -217,11 +218,17 @@ img {
     transition: all 0.6s ease;
 }
 
+/* Parallax Effect */
+#profile-image {
+    will-change: transform;
+}
+
 /* Media Queries */
 @media (min-width: 768px) {
-    .container {
+    .header .container {
         flex-direction: row;
         align-items: center;
+        justify-content: center;
         padding: 40px;
     }
 
@@ -259,6 +266,29 @@ img {
     .header.shrink #title {
         font-size: 1.4em;
     }
+
+    /* Align the About Me section next to the image */
+    main {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 50px 20px;
+    }
+
+    .content {
+        text-align: left;
+        padding: 0 20px;
+        max-width: 600px;
+        animation: none; /* Remove animation on desktop */
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .content h2, .content p {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Fade-In Animation */
@@ -267,9 +297,4 @@ img {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* Parallax Effect */
-#profile-image {
-    will-change: transform;
 }
