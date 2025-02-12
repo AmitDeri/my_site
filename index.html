@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me</title>
+    <title>Amit Deri</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,6 +11,7 @@
             color: white;
             text-align: center;
             padding: 20px;
+            overflow-y: auto; /* Make the page scrollable */
         }
         .container {
             max-width: 600px;
@@ -21,13 +22,13 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
         img {
-            width: 150px;
-            height: 150px;
+            width: 200px; /* Increase image size */
+            height: 200px;
             border-radius: 50%;
             object-fit: cover;
             margin-bottom: 20px;
         }
-        .cv-button {
+        .cv-button, .contact-link {
             display: inline-block;
             margin-top: 20px;
             padding: 10px 20px;
@@ -36,8 +37,9 @@
             text-decoration: none;
             border-radius: 5px;
             transition: 0.3s;
+            margin-right: 10px; /* Add space between buttons */
         }
-        .cv-button:hover {
+        .cv-button:hover, .contact-link:hover {
             background: #483d8b;
         }
     </style>
@@ -45,11 +47,13 @@
 <body>
     <div class="container">
         <img src="20250208_112002.jpg" alt="My Photo">
-        <h1>About Me</h1>
+        <h1>Amit Deri</h1>
         <p>I’m a Computer Science graduate with a strong passion for software development and cybersecurity. With experience in Java and Python, I enjoy building efficient and scalable applications while also exploring system vulnerabilities and secure coding practices.</p>
         <p>I love tackling complex challenges with a structured and analytical approach, always eager to learn and grow in a dynamic, innovative environment. Technology excites me, and I'm always looking for opportunities to apply my skills and make an impact.</p>
         <p>Feel free to reach out—I’d love to connect!</p>
         <a href="AmitDeri_CV.pdf" class="cv-button" download>Download My CV</a>
+        <a href="https://www.linkedin.com/in/amit-deri-910a41157/" class="contact-link" target="_blank">LinkedIn</a>
+        <a href="mailto:amit.derri@gmail.com" class="contact-link">Email Me</a>
     </div>
 </body>
 </html>
