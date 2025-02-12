@@ -80,14 +80,15 @@ img {
     font-size: 1.8em;
 }
 
-#title {
+/* Updated from #title to .title */
+.title {
     font-size: 1.5em;
     color: #636e72;
     margin-top: 10px;
     transition: all 0.5s ease;
 }
 
-.header.shrink #title {
+.header.shrink .title {
     font-size: 1.2em;
 }
 
@@ -233,7 +234,7 @@ img {
         font-size: 3.5em;
     }
 
-    #title {
+    .title {
         font-size: 2em;
     }
 
@@ -241,7 +242,7 @@ img {
         font-size: 2.5em;
     }
 
-    .header.shrink #title {
+    .header.shrink .title {
         font-size: 1.8em;
     }
 
