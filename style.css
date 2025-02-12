@@ -2,31 +2,42 @@ body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     overflow-x: hidden;
-    scroll-behavior: smooth; /* Smooth scrolling */
+    scroll-behavior: smooth;
 }
 
 .header {
     position: relative;
     height: 100vh;
-    background: url('20250208_112002.jpg') no-repeat center center;
-    background-size: cover;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     color: white;
     text-align: center;
+    background: linear-gradient(135deg, #4b6cb7, #182848);
     transition: height 0.5s ease;
 }
 
-.header.shrink {
-    height: 50vh;
-    background-position: top center; /* Adjust to show face */
+.profile-pic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    transition: width 0.5s ease, height 0.5s ease;
+}
+
+.shrink-pic {
+    width: 100px;
+    height: 100px;
 }
 
 .header h1 {
     font-size: 3em;
     margin: 0;
+    transition: font-size 0.5s ease;
+}
+
+.shrink-name {
+    font-size: 1.5em;
 }
 
 .header h2 {
@@ -65,7 +76,7 @@ body {
 }
 
 .content p {
-    max-width: 600px;
+    max-width: 800px;
     margin: 20px auto;
     line-height: 1.6;
 }
@@ -84,4 +95,35 @@ body {
 .cv-button:hover {
     background: #483d8b;
     transform: translateY(-3px);
+}
+
+/* Desktop-specific styles */
+@media (min-width: 768px) {
+    .header {
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .profile-pic {
+        width: 250px;
+        height: 250px;
+    }
+
+    .shrink-pic {
+        width: 120px;
+        height: 120px;
+    }
+
+    .header h1 {
+        font-size: 3.5em;
+    }
+
+    .shrink-name {
+        font-size: 2em;
+    }
+
+    .content {
+        padding: 80px 40px;
+    }
 }
