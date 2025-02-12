@@ -59,12 +59,6 @@ img {
     height: 100px;
 }
 
-/* Parallax Effect */
-#profile-image {
-    position: relative;
-    z-index: 1;
-}
-
 /* Info Styles */
 .info {
     text-align: center;
@@ -210,7 +204,7 @@ img {
     top: 0;
     left: 0;
     width: 100%;
-    background: #d0f0fd;
+    background: #e0f7e9; /* Match the body background */
     color: #2d3436;
     padding: 10px 0;
     text-align: center;
@@ -284,6 +278,13 @@ img {
     .content h2, .content p {
         opacity: 1;
         transform: translateY(0);
+    }
+
+    /* Ensure name is not fixed on desktop */
+    .name-fixed {
+        position: static;
+        background: none;
+        padding: 0;
     }
 }
 
