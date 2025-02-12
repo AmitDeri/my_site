@@ -3,7 +3,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const profileImage = document.getElementById('profile-image');
     const title = document.getElementById('title');
     const links = document.getElementById('links');
+    const nameElement = document.getElementById('name');
     const fadeElements = document.querySelectorAll('.content h2, .content p');
+
+    // Variables for mobile scrolling
+    let nameFixed = false;
 
     // Scroll event for shrinking header
     window.addEventListener('scroll', function () {
@@ -25,11 +29,29 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // Parallax effect on profile image for mobile
+        // Parallax effect on profile image and fading elements (Mobile)
         if (window.innerWidth < 768) {
             let offset = window.pageYOffset;
-            profileImage.style.transform = `translateY(${offset * 0.5}px) scale(${1 - offset / 1000})`;
-            title.style.transform = `translateY(${offset * 0.3}px)`;
+
+            // Fade out profile image and links
+            profileImage.style.opacity = Math.max(1 - offset / 200, 0);
+            links.style.opacity = Math.max(1 - offset / 200, 0);
+            title.style.opacity = Math.max(1 - offset / 200, 0);
+
+            // Shrink the profile image
+            let scale = Math.max(1 - offset / 500, 0.5);
+            profileImage.style.transform = `translateY(${offset * 0.5}px) scale(${scale})`;
+
+            // Change name to fixed position after scrolling past the header
+            if (offset > header.offsetHeight && !nameFixed) {
+                nameElement.classList.add('name-fixed');
+                nameElement.style.color = '#2d3436'; // Darker color for fixed name
+                nameFixed = true;
+            } else if (offset <= header.offsetHeight && nameFixed) {
+                nameElement.classList.remove('name-fixed');
+                nameElement.style.color = ''; // Reset color
+                nameFixed = false;
+            }
         }
     });
 
