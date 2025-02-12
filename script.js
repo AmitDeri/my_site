@@ -1,69 +1,102 @@
 document.addEventListener('DOMContentLoaded', function () {
     const header = document.getElementById('header');
     const profileImage = document.getElementById('profile-image');
-    const title = document.getElementById('title');
+    const titles = document.querySelectorAll('.title');
     const links = document.getElementById('links');
     const nameElement = document.getElementById('name');
     const fadeElements = document.querySelectorAll('.content h2, .content p');
 
     // Variables for mobile scrolling
     let nameFixed = false;
+    let ticking = false;
 
-    // Function to set initial styles based on screen width
-    function setInitialStyles() {
-        if (window.innerWidth >= 768) {
-            // Desktop styles
-            header.classList.remove('shrink');
-            profileImage.style.opacity = '1';
-            profileImage.style.transform = 'none';
-            title.style.opacity = '1';
-            links.style.opacity = '1';
-            nameElement.classList.remove('name-fixed');
-            nameElement.style.color = '';
-            nameFixed = false;
-        } else {
-            // Mobile styles
-            header.classList.remove('shrink');
-            profileImage.style.opacity = '1';
-            profileImage.style.transform = 'none';
-            title.style.opacity = '1';
-            links.style.opacity = '1';
-            nameElement.classList.remove('name-fixed');
-            nameElement.style.color = '';
-            nameFixed = false;
-        }
-    }
-
-    // Run on page load
-    setInitialStyles();
-
-    // Run on window resize
-    window.addEventListener('resize', setInitialStyles);
-
-    // Scroll event for shrinking header on desktop only
-    window.addEventListener('scroll', function () {
+    // Scroll handler
+    function handleScroll() {
         let offset = window.pageYOffset;
 
-        if (window.innerWidth >= 768) {
-            // Only apply transformations on desktop devices
+        if (window.innerWidth < 768) {
+            // Apply mobile scroll effects
+            if (!ticking) {
+                window.requestAnimationFrame(function () {
+                    applyMobileScrollEffects(offset);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        } else {
+            // Apply desktop scroll effects
             if (offset > 50) {
                 header.classList.add('shrink');
             } else {
                 header.classList.remove('shrink');
             }
-
-            // Additional scroll effects for desktop can be added here
+            // Reset styles for mobile
+            resetMobileStyles();
         }
-        // No need to handle scroll events for mobile devices here
-    });
+    }
+
+    // Apply mobile scroll effects
+    function applyMobileScrollEffects(offset) {
+        const fadeStart = 0;
+        const fadeEnd = 200;
+        const maxScale = 1;
+        const minScale = 0.5;
+
+        // Calculate opacity based on scroll position
+        let opacity = 1 - Math.min(Math.max(offset - fadeStart, 0) / (fadeEnd - fadeStart), 1);
+
+        // Calculate scale based on scroll position
+        let scale = maxScale - Math.min(Math.max(offset - fadeStart, 0) / (fadeEnd - fadeStart), 1) * (maxScale - minScale);
+
+        // Apply transformations
+        profileImage.style.opacity = opacity;
+        profileImage.style.transform = `scale(${scale})`;
+
+        titles.forEach(function(title) {
+            title.style.opacity = opacity;
+        });
+
+        links.style.opacity = opacity;
+
+        // Fix the name at the top when scrolling past the header
+        if (offset > header.offsetHeight) {
+            if (!nameFixed) {
+                nameElement.classList.add('name-fixed');
+                nameFixed = true;
+            }
+        } else {
+            if (nameFixed) {
+                nameElement.classList.remove('name-fixed');
+                nameFixed = false;
+            }
+        }
+    }
+
+    // Reset mobile styles
+    function resetMobileStyles() {
+        profileImage.style.opacity = '1';
+        profileImage.style.transform = 'none';
+        titles.forEach(function(title) {
+            title.style.opacity = '1';
+        });
+        links.style.opacity = '1';
+
+        if (nameFixed) {
+            nameElement.classList.remove('name-fixed');
+            nameFixed = false;
+        }
+    }
+
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
 
     // Intersection Observer for fade-in effect
     const options = {
-        threshold: 0.1,
+        threshold: 0.1
     };
 
-    const observer = new IntersectionObserver(function (entries, observer) {
-        entries.forEach((entry) => {
+    const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.style.animationPlayState = 'running';
                 observer.unobserve(entry.target);
@@ -71,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }, options);
 
-    fadeElements.forEach((element) => {
+    fadeElements.forEach(element => {
         observer.observe(element);
     });
 });
