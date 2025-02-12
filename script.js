@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', function () {
             links.style.opacity = opacityValue;
             title.style.opacity = opacityValue;
 
-            // Shrink the profile image
+            // Shrink the profile image without vertical movement
             let scale = Math.max(1 - offset / 500, 0.5);
-            profileImage.style.transform = `translateY(${offset * 0.5}px) scale(${scale})`;
+            profileImage.style.transform = `scale(${scale})`;
 
             // Fix the name at the top when scrolling past the header
             if (offset > header.offsetHeight && !nameFixed) {
