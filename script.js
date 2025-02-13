@@ -37,16 +37,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Apply mobile scroll effects
     function applyMobileScrollEffects(offset) {
-        const fadeStart = 0;
-        const fadeEnd = 200;
-        const maxScale = 1;
-        const minScale = 0.5;
-
+        const totalScrollableHeight = document.body.scrollHeight - window.innerHeight;
+        
         // Calculate opacity based on scroll position
-        let opacity = 1 - Math.min(Math.max(offset - fadeStart, 0) / (fadeEnd - fadeStart), 1);
+        let opacity = 1 - offset / totalScrollableHeight;
+
+        // Ensure opacity is between 0 and 1
+        opacity = Math.max(0, Math.min(1, opacity));
 
         // Calculate scale based on scroll position
-        let scale = maxScale - Math.min(Math.max(offset - fadeStart, 0) / (fadeEnd - fadeStart), 1) * (maxScale - minScale);
+        const maxScale = 1;
+        const minScale = 0.5;
+        let scale = maxScale - (offset / totalScrollableHeight) * (maxScale - minScale);
+        scale = Math.max(minScale, Math.min(maxScale, scale));
 
         // Apply transformations
         profileImage.style.opacity = opacity;
