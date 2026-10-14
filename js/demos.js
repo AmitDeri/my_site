@@ -140,13 +140,13 @@
       }
       // nodes
       const node = (pt, label, color, sub) => {
-        g.font = '600 12px "JetBrains Mono", monospace';
+        g.font = '600 12px "Geist Mono", ui-monospace, monospace';
         const tw = Math.max(g.measureText(label).width, sub ? g.measureText(sub).width : 0) + 22;
         roundRect(g, pt.x - tw / 2, pt.y - 15 - (sub ? 7 : 0), tw, sub ? 44 : 30, 8);
         g.fillStyle = 'rgba(12,17,29,.92)'; g.fill(); g.strokeStyle = color; g.lineWidth = 1.2; g.stroke();
         g.fillStyle = '#e6ebf5'; g.textAlign = 'center'; g.textBaseline = 'middle';
         g.fillText(label, pt.x, pt.y - (sub ? 7 : 0));
-        if (sub) { g.fillStyle = '#8b95a9'; g.font = '11px "JetBrains Mono", monospace'; g.fillText(sub, pt.x, pt.y + 10); }
+        if (sub) { g.fillStyle = '#8b95a9'; g.font = '11px "Geist Mono", ui-monospace, monospace'; g.fillText(sub, pt.x, pt.y + 10); }
       };
       const nw = narrow();
       pubs.forEach((p, i) => node(P(0, p.y), nw ? p.s : p.n, hues[i]));
@@ -1332,7 +1332,7 @@ deny contains msg if {
         if (area >= ma()) boxes.push({ x0, y0, x1, y1, area });
       }
       cv.det.putImageData(img, 0, 0);
-      cv.det.strokeStyle = '#5eead4'; cv.det.lineWidth = 1.5; cv.det.font = '9px monospace'; cv.det.fillStyle = '#5eead4';
+      cv.det.strokeStyle = '#5eead4'; cv.det.lineWidth = 1.5; cv.det.font = '500 9px "Geist Mono", ui-monospace, monospace'; cv.det.fillStyle = '#5eead4';
       boxes.forEach((b, i) => { cv.det.strokeRect(b.x0 - 1, b.y0 - 1, b.x1 - b.x0 + 3, b.y1 - b.y0 + 3); cv.det.fillText('#' + (i + 1), b.x0, Math.max(8, b.y0 - 3)); });
       cv.det.fillStyle = 'rgba(0,0,0,.6)'; cv.det.fillRect(0, H - 12, 90, 12); cv.det.fillStyle = '#e6ebf5'; cv.det.fillText(`${boxes.length} moving region${boxes.length === 1 ? '' : 's'}`, 3, H - 3);
     });

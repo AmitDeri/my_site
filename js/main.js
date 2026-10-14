@@ -14,6 +14,13 @@
     const c = $('#net'); const g = c.getContext('2d');
     let w, h, nodes = [], packets = [], mouse = { x: -999, y: -999 };
     const colors = ['#5eead4', '#a78bfa', '#f472b6', '#60a5fa'];
+    // Line/dot ink follows the theme (re-read when it changes).
+    let ink = '148,163,184', dotInk = 'rgba(203,213,225,.55)';
+    function readInk() {
+      const light = document.documentElement.dataset.theme === 'light';
+      ink = light ? '30,41,59' : '148,163,184'; dotInk = light ? 'rgba(30,41,59,.35)' : 'rgba(203,213,225,.5)';
+    }
+    readInk(); addEventListener('themechange', readInk);
     function resize() {
       const dpr = Math.min(devicePixelRatio || 1, 2);
       w = c.offsetWidth; h = c.offsetHeight; c.width = w * dpr; c.height = h * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -39,12 +46,12 @@
       for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
         const a = nodes[i], b = nodes[j], d = Math.hypot(a.x - b.x, a.y - b.y);
         if (d < D) {
-          g.strokeStyle = `rgba(148,163,184,${0.14 * (1 - d / D)})`; g.lineWidth = 1;
+          g.strokeStyle = `rgba(${ink},${0.14 * (1 - d / D)})`; g.lineWidth = 1;
           g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.stroke();
           if (!REDUCED && Math.random() < 0.0009 && packets.length < 40) packets.push({ a, b, t: 0, c: colors[(Math.random() * colors.length) | 0] });
         }
       }
-      for (const n of nodes) { g.fillStyle = 'rgba(203,213,225,.55)'; g.beginPath(); g.arc(n.x, n.y, n.r, 0, 7); g.fill(); }
+      for (const n of nodes) { g.fillStyle = dotInk; g.beginPath(); g.arc(n.x, n.y, n.r, 0, 7); g.fill(); }
       for (let i = packets.length - 1; i >= 0; i--) {
         const p = packets[i]; p.t += 0.018;
         if (p.t >= 1) { packets.splice(i, 1); continue; }
@@ -107,12 +114,12 @@
       if (!m) return;
       const r = m.getBoundingClientRect();
       m.classList.add('pull');
-      m.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.18}px, ${(e.clientY - r.top - r.height / 2) * 0.3}px)`;
+      m.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.1}px, ${(e.clientY - r.top - r.height / 2) * 0.16}px)`;
     });
     const tilt = $('#tilt');
     tilt.addEventListener('pointermove', (e) => {
       const r = tilt.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
-      tilt.style.transform = `perspective(900px) rotateY(${x * 12}deg) rotateX(${-y * 12}deg)`;
+      tilt.style.transform = `perspective(900px) rotateY(${x * 7}deg) rotateX(${-y * 7}deg)`;
     });
     tilt.addEventListener('pointerleave', () => (tilt.style.transform = ''));
   }
@@ -273,11 +280,18 @@
     exit: () => closeTerm(),
   };
   function openTerm() {
+    term.classList.remove('min');
     term.hidden = false; requestAnimationFrame(() => term.classList.add('open'));
     if (!out.children.length) { print('Welcome to amit@portfolio. Type <b>help</b> to get started.', 'ok'); }
     setTimeout(() => input.focus(), 50);
   }
-  function closeTerm() { term.classList.remove('open'); setTimeout(() => (term.hidden = true), 200); }
+  function closeTerm() {
+    term.classList.remove('open');
+    setTimeout(() => { term.hidden = true; term.classList.remove('min', 'max'); }, 200);
+  }
+  // macOS-style window controls: yellow docks the window down to its title bar, green expands it.
+  function minTerm() { term.classList.remove('max'); term.classList.add('min'); input.blur(); }
+  function maxTerm() { term.classList.remove('min'); term.classList.toggle('max'); input.focus(); }
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       const raw = input.value.trim(); input.value = '';
@@ -298,9 +312,14 @@
   });
   $$('[data-terminal]').forEach((b) => b.addEventListener('click', openTerm));
   $('[data-term-close]').addEventListener('click', closeTerm);
+  $('[data-term-min]').addEventListener('click', minTerm);
+  $('[data-term-max]').addEventListener('click', maxTerm);
+  // Click a docked title bar to bring it back; double-click the bar to zoom, like macOS.
+  $('.term-bar').addEventListener('click', (e) => { if (term.classList.contains('min') && !e.target.closest('.tl')) openTerm(), input.focus(); });
+  $('.term-bar').addEventListener('dblclick', (e) => { if (!e.target.closest('.tl') && !term.classList.contains('min')) maxTerm(); });
   document.addEventListener('keydown', (e) => {
     const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
-    if (e.key === '`' && !typing) { e.preventDefault(); term.hidden ? openTerm() : closeTerm(); }
+    if (e.key === '`' && !typing) { e.preventDefault(); term.hidden || term.classList.contains('min') ? openTerm() : closeTerm(); }
   });
 
   window.Portfolio = { openSkill, openDemo, openTerminal: () => { closeModal(); openTerm(); } };
