@@ -1,14 +1,14 @@
 // All skill content is derived from the CV. `demo` links a skill to a live
 // interactive demo in demos.js; `level` states where the depth comes from.
 window.CATEGORIES = [
-  { id: 'cloud',    name: 'Cloud & Streaming',     color: '#5eead4' },
-  { id: 'devops',   name: 'Containers & CI/CD',    color: '#60a5fa' },
-  { id: 'backend',  name: 'Languages & Backend',   color: '#a78bfa' },
-  { id: 'mobile',   name: 'Mobile',                color: '#fbbf24' },
-  { id: 'ai',       name: 'AI Research & Workflows', color: '#f472b6' },
-  { id: 'security', name: 'Security & Networking', color: '#f87171' },
-  { id: 'vision',   name: 'Computer Vision',       color: '#34d399' },
-  { id: 'cs',       name: 'CS Foundations & IT',   color: '#94a3b8' },
+  { id: 'cloud',    name: 'Cloud & Streaming',     color: 'var(--accent)' },
+  { id: 'devops',   name: 'Containers & CI/CD',    color: 'var(--accent)' },
+  { id: 'backend',  name: 'Languages & Backend',   color: 'var(--accent)' },
+  { id: 'mobile',   name: 'Mobile',                color: 'var(--accent)' },
+  { id: 'ai',       name: 'AI Research & Workflows', color: 'var(--accent)' },
+  { id: 'security', name: 'Security & Networking', color: 'var(--accent)' },
+  { id: 'vision',   name: 'Computer Vision',       color: 'var(--accent)' },
+  { id: 'cs',       name: 'CS Foundations & IT',   color: 'var(--accent)' },
 ];
 
 window.LEVELS = {

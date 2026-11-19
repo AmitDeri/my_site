@@ -75,7 +75,7 @@
     ro.observe(c); s.add(() => ro.disconnect());
 
     const pubs = [{ n: 'iOS app', s: 'iOS', y: 0.2 }, { n: 'Android app', s: 'Android', y: 0.5 }, { n: 'Web', s: 'Web', y: 0.8 }];
-    const sinks = [{ n: 'BigQuery', s: 'BQ', k: 'bq', y: 0.2, c: '#60a5fa' }, { n: 'GCS', s: 'GCS', k: 'gcs', y: 0.5, c: '#fbbf24' }, { n: 'Cloud DB', s: 'DB', k: 'db', y: 0.8, c: '#f472b6' }];
+    const sinks = [{ n: 'BigQuery', s: 'BQ', k: 'bq', y: 0.2, c: '#6b9cff' }, { n: 'GCS', s: 'GCS', k: 'gcs', y: 0.5, c: '#c3d2f2' }, { n: 'Cloud DB', s: 'DB', k: 'db', y: 0.8, c: '#8fa6d6' }];
     let mode = 'stream';
     let clock = 0, nextSpawn = 0, batchTimer = 0;
     const BATCH_EVERY = 5000;
@@ -105,7 +105,7 @@
     });
     s.on(el.querySelector('[data-burst]'), 'click', () => { for (let i = 0; i < 40; i++) s.timeout(spawn, i * 25); });
 
-    const hues = ['#5eead4', '#a78bfa', '#60a5fa'];
+    const hues = ['#6b9cff', '#9db8ff', '#6b9cff'];
     s.loop((dt) => {
       clock += dt;
       if (clock > nextSpawn) { spawn(); nextSpawn = clock + 180 + Math.random() * 260; }
@@ -151,7 +151,7 @@
       const nw = narrow();
       pubs.forEach((p, i) => node(P(0, p.y), nw ? p.s : p.n, hues[i]));
       sinks.forEach((p) => node(P(1, p.y), nw ? p.s : p.n, p.c));
-      if (mode === 'stream') node(tp, nw ? 'topic' : 'topic: session-events', '#5eead4', nw ? 'fan-out' : 'Pub/Sub fan-out');
+      if (mode === 'stream') node(tp, nw ? 'topic' : 'topic: session-events', '#6b9cff', nw ? 'fan-out' : 'Pub/Sub fan-out');
       else node(tp, nw ? `buffer [${buffer.length}]` : `staging buffer [${buffer.length}]`, '#f87171', `next run ${((BATCH_EVERY - batchTimer) / 1000).toFixed(1)}s`);
       ['pub', 'bq', 'gcs', 'db'].forEach((k) => set(k, counts[k]));
     });
@@ -1279,7 +1279,7 @@ deny contains msg if {
     });
     s.add(() => stream && stream.getTracks().forEach((t) => t.stop()));
     // synthetic scene
-    const blobs = [{ x: 20, y: 40, vx: 0.9, vy: 0.3, r: 11, c: '#f472b6' }, { x: 120, y: 90, vx: -0.6, vy: -0.5, r: 8, c: '#5eead4' }, { x: 80, y: 20, vx: 0.4, vy: 0.7, r: 6, c: '#fbbf24' }];
+    const blobs = [{ x: 20, y: 40, vx: 0.9, vy: 0.3, r: 11, c: '#8fa6d6' }, { x: 120, y: 90, vx: -0.6, vy: -0.5, r: 8, c: '#6b9cff' }, { x: 80, y: 20, vx: 0.4, vy: 0.7, r: 6, c: '#c3d2f2' }];
     function scene(t) {
       const gr = sg.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#1e293b'); gr.addColorStop(1, '#0f172a');
       sg.fillStyle = gr; sg.fillRect(0, 0, W, H);
@@ -1332,7 +1332,7 @@ deny contains msg if {
         if (area >= ma()) boxes.push({ x0, y0, x1, y1, area });
       }
       cv.det.putImageData(img, 0, 0);
-      cv.det.strokeStyle = '#5eead4'; cv.det.lineWidth = 1.5; cv.det.font = '500 9px "Geist Mono", ui-monospace, monospace'; cv.det.fillStyle = '#5eead4';
+      cv.det.strokeStyle = '#6b9cff'; cv.det.lineWidth = 1.5; cv.det.font = '500 9px "Geist Mono", ui-monospace, monospace'; cv.det.fillStyle = '#6b9cff';
       boxes.forEach((b, i) => { cv.det.strokeRect(b.x0 - 1, b.y0 - 1, b.x1 - b.x0 + 3, b.y1 - b.y0 + 3); cv.det.fillText('#' + (i + 1), b.x0, Math.max(8, b.y0 - 3)); });
       cv.det.fillStyle = 'rgba(0,0,0,.6)'; cv.det.fillRect(0, H - 12, 90, 12); cv.det.fillStyle = '#e6ebf5'; cv.det.fillText(`${boxes.length} moving region${boxes.length === 1 ? '' : 's'}`, 3, H - 3);
     });
@@ -1433,7 +1433,7 @@ deny contains msg if {
       const bw = w / N;
       r.a.forEach((v, i) => {
         const on = r.hi && r.hi.includes(i);
-        g.fillStyle = r.done ? '#34d399' : on ? (r.hiw ? '#f472b6' : '#fbbf24') : 'rgba(167,139,250,.75)';
+        g.fillStyle = r.done ? '#34d399' : on ? (r.hiw ? '#8fa6d6' : '#c3d2f2') : 'rgba(157,184,255,.75)';
         const bh = (v / N) * (h - 4); g.fillRect(i * bw + 1, h - bh, Math.max(1, bw - 2), bh);
       });
     }

@@ -7,7 +7,7 @@
   // ---------------------------------------------------------------- theme toggle
   function apply(t) {
     root.dataset.theme = t;
-    if (meta) meta.content = t === 'light' ? '#f3f4f7' : '#07080c';
+    if (meta) meta.content = t === 'light' ? '#fbfbfc' : '#0c0e12';
     try { localStorage.setItem('theme', t); } catch (e) {}
     dispatchEvent(new Event('themechange'));
   }
@@ -30,6 +30,8 @@
     lens.style.width = a.offsetWidth + 'px';
     lens.style.transform = `translateX(${a.offsetLeft}px)`;
     lens.classList.add('on');
+    // on phones the links scroll sideways: keep the current one in view
+    if (ul.scrollWidth > ul.clientWidth) ul.scrollTo({ left: a.offsetLeft - (ul.clientWidth - a.offsetWidth) / 2, behavior: instant ? 'auto' : 'smooth' });
     if (instant) { lens.offsetWidth; lens.style.transition = ''; }
   }
   const active = () => ul.querySelector('a.active');

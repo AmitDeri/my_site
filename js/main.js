@@ -3,163 +3,69 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const FINE = matchMedia('(pointer: fine)').matches;
   const catOf = (id) => CATEGORIES.find((c) => c.id === id);
 
   $('#year').textContent = new Date().getFullYear();
 
-  // ---------------------------------------------------------------- hero: live event network
-  (function net() {
-    const c = $('#net'); const g = c.getContext('2d');
-    let w, h, nodes = [], packets = [], mouse = { x: -999, y: -999 };
-    const colors = ['#5eead4', '#a78bfa', '#f472b6', '#60a5fa'];
-    // Line/dot ink follows the theme (re-read when it changes).
-    let ink = '148,163,184', dotInk = 'rgba(203,213,225,.55)';
-    function readInk() {
-      const light = document.documentElement.dataset.theme === 'light';
-      ink = light ? '30,41,59' : '148,163,184'; dotInk = light ? 'rgba(30,41,59,.35)' : 'rgba(203,213,225,.5)';
-    }
-    readInk(); addEventListener('themechange', readInk);
-    function resize() {
-      const dpr = Math.min(devicePixelRatio || 1, 2);
-      w = c.offsetWidth; h = c.offsetHeight; c.width = w * dpr; c.height = h * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const n = Math.round(Math.min(90, (w * h) / 16000));
-      nodes = Array.from({ length: n }, () => ({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25, r: 1 + Math.random() * 1.6 }));
-    }
-    resize(); addEventListener('resize', resize);
-    c.parentElement.addEventListener('pointermove', (e) => { const r = c.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
-    c.parentElement.addEventListener('pointerleave', () => { mouse.x = mouse.y = -999; });
-    let visible = true;
-    new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(c);
-    const D = 130;
-    function frame() {
-      requestAnimationFrame(frame);
-      if (!visible) return;
-      g.clearRect(0, 0, w, h);
-      for (const n of nodes) {
-        n.x += n.vx; n.y += n.vy;
-        if (n.x < 0 || n.x > w) n.vx *= -1; if (n.y < 0 || n.y > h) n.vy *= -1;
-        const dx = n.x - mouse.x, dy = n.y - mouse.y, d = Math.hypot(dx, dy);
-        if (d < 120) { n.x += (dx / d) * 0.6; n.y += (dy / d) * 0.6; }
-      }
-      for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
-        const a = nodes[i], b = nodes[j], d = Math.hypot(a.x - b.x, a.y - b.y);
-        if (d < D) {
-          g.strokeStyle = `rgba(${ink},${0.14 * (1 - d / D)})`; g.lineWidth = 1;
-          g.beginPath(); g.moveTo(a.x, a.y); g.lineTo(b.x, b.y); g.stroke();
-          if (!REDUCED && Math.random() < 0.0009 && packets.length < 40) packets.push({ a, b, t: 0, c: colors[(Math.random() * colors.length) | 0] });
-        }
-      }
-      for (const n of nodes) { g.fillStyle = dotInk; g.beginPath(); g.arc(n.x, n.y, n.r, 0, 7); g.fill(); }
-      for (let i = packets.length - 1; i >= 0; i--) {
-        const p = packets[i]; p.t += 0.018;
-        if (p.t >= 1) { packets.splice(i, 1); continue; }
-        const x = p.a.x + (p.b.x - p.a.x) * p.t, y = p.a.y + (p.b.y - p.a.y) * p.t;
-        g.fillStyle = p.c; g.shadowColor = p.c; g.shadowBlur = 10; g.beginPath(); g.arc(x, y, 2.2, 0, 7); g.fill(); g.shadowBlur = 0;
-      }
-    }
-    frame();
-  })();
-
-  // ---------------------------------------------------------------- typed roles
-  (function typed() {
-    const words = ['event-driven pipelines on GCP.', 'SwiftUI apps with real-time sync.', 'REST APIs that tame messy data.', 'CI/CD that fails safely.', 'AI systems with deterministic cores.', 'tools that find security holes.'];
-    const el = $('.typed-word');
-    if (REDUCED) { el.textContent = words[0]; return; }
-    let wi = 0, ci = 0, del = false;
-    (function tick() {
-      const w = words[wi];
-      el.textContent = w.slice(0, ci);
-      if (!del && ci === w.length) { del = true; return setTimeout(tick, 1800); }
-      if (del && ci === 0) { del = false; wi = (wi + 1) % words.length; }
-      ci += del ? -1 : 1;
-      setTimeout(tick, del ? 28 : 55);
-    })();
-  })();
-
-  // ---------------------------------------------------------------- scroll progress, nav, reveal, counters
-  const progress = $('.progress'), nav = $('#nav');
+  // ---------------------------------------------------------------- nav, reveal
+  const nav = $('#nav');
   addEventListener('scroll', () => {
-    const max = document.documentElement.scrollHeight - innerHeight;
-    progress.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
     nav.classList.toggle('scrolled', scrollY > 30);
   }, { passive: true });
 
   const io = new IntersectionObserver((entries) => entries.forEach((e) => {
     if (!e.isIntersecting) return;
     e.target.classList.add('in');
-    $$('[data-count]', e.target).forEach(countUp);
     io.unobserve(e.target);
   }), { threshold: 0.12 });
   function observeReveal(root = document) { $$('.reveal:not(.in)', root).forEach((el) => io.observe(el)); }
-  function countUp(el) {
-    const to = +el.dataset.count, t0 = performance.now(), D = REDUCED ? 1 : 1100;
-    (function f(t) { const k = Math.min(1, (t - t0) / D); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
-  }
 
   const sectionIO = new IntersectionObserver((entries) => entries.forEach((e) => {
     if (e.isIntersecting) $$('.nav a').forEach((a) => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
   }), { rootMargin: '-45% 0px -50% 0px' });
   $$('main section[id]').forEach((s) => sectionIO.observe(s));
 
-  // ---------------------------------------------------------------- cursor glow, magnetic buttons, spotlight, tilt
-  if (FINE && !REDUCED) {
-    const glow = $('.glow');
-    addEventListener('pointermove', (e) => { glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`; glow.style.opacity = 1; }, { passive: true });
-    document.addEventListener('pointerleave', () => (glow.style.opacity = 0));
-    document.addEventListener('pointermove', (e) => {
-      const m = e.target.closest && e.target.closest('.magnetic');
-      $$('.magnetic.pull').forEach((b) => { if (b !== m) { b.classList.remove('pull'); b.style.transform = ''; } });
-      if (!m) return;
-      const r = m.getBoundingClientRect();
-      m.classList.add('pull');
-      m.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.1}px, ${(e.clientY - r.top - r.height / 2) * 0.16}px)`;
-    });
-    const tilt = $('#tilt');
-    tilt.addEventListener('pointermove', (e) => {
-      const r = tilt.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
-      tilt.style.transform = `perspective(900px) rotateY(${x * 7}deg) rotateX(${-y * 7}deg)`;
-    });
-    tilt.addEventListener('pointerleave', () => (tilt.style.transform = ''));
-  }
-  document.addEventListener('pointermove', (e) => {
-    const card = e.target.closest && e.target.closest('.skill, .project, .card');
-    if (!card) return;
-    const r = card.getBoundingClientRect();
-    card.style.setProperty('--mx', e.clientX - r.left + 'px'); card.style.setProperty('--my', e.clientY - r.top + 'px');
-  }, { passive: true });
-
   // ---------------------------------------------------------------- skills grid + filters
-  const grid = $('.skill-grid'), filters = $('.filters');
-  let activeCat = 'all';
-  filters.innerHTML = [`<button class="on" data-cat="all">All <small>${SKILLS.length}</small></button>`]
-    .concat(CATEGORIES.map((c) => `<button data-cat="${c.id}" style="--c:${c.color}">${c.name} <small>${SKILLS.filter((s) => s.cat === c.id).length}</small></button>`)).join('');
-  function renderSkills() {
-    grid.innerHTML = CATEGORIES.filter((c) => activeCat === 'all' || c.id === activeCat).map((c) => `
-      <div class="skill-group reveal" style="--c:${c.color}">
-        <h3><i></i>${c.name}</h3>
-        <div class="skill-list">${SKILLS.filter((s) => s.cat === c.id).map((s) => `
-          <button class="skill" data-skill="${s.id}">
-            <span class="s-name">${esc(s.name)}</span>
-            <span class="s-meta"><span class="lvl lvl-${s.level}">${LEVELS[s.level].label}</span>${s.demo ? '<span class="live-pill">live</span>' : ''}</span>
-            <span class="s-where">${esc(s.where)}</span>
-          </button>`).join('')}</div>
-      </div>`).join('');
-    observeReveal(grid);
+  const grid = $('.skill-grid');
+  const inCat = (id) => SKILLS.filter((s) => s.cat === id);
+  grid.innerHTML = CATEGORIES.map((c) => {
+    const list = inCat(c.id);
+    return `
+      <button class="cat-card reveal" data-cat="${c.id}">
+        <span class="cat-name">${esc(c.name)}</span>
+        <span class="cat-preview">${list.slice(0, 3).map((s) => esc(s.name)).join(', ')}${list.length > 3 ? '…' : ''}</span>
+        <span class="cat-more">${list.length} skills <i aria-hidden="true">→</i></span>
+      </button>`;
+  }).join('');
+
+  // ---------------------------------------------------------------- skill group popup
+  const catModal = $('#cat-modal');
+  function openCat(id) {
+    const c = catOf(id); if (!c) return;
+    const list = inCat(id);
+    $('#c-title').textContent = c.name;
+    $('.c-count', catModal).textContent = `${list.length} skills · select one for the details`;
+    $('.cat-list', catModal).innerHTML = list.map((s, i) => `
+      <li style="--i:${i}"><button data-skill="${s.id}">
+        <span class="cl-name">${esc(s.name)}</span>
+        <span class="cl-where">${esc(s.where)}</span>
+        <i aria-hidden="true">→</i>
+      </button></li>`).join('');
+    catModal.showModal(); document.body.classList.add('locked');
+    catModal.querySelector('.modal-inner').scrollTop = 0;
   }
-  filters.addEventListener('click', (e) => {
-    const b = e.target.closest('button'); if (!b) return;
-    $$('button', filters).forEach((x) => x.classList.toggle('on', x === b));
-    activeCat = b.dataset.cat; renderSkills();
+  catModal.addEventListener('close', () => { if (!modal.open) document.body.classList.remove('locked'); });
+  catModal.addEventListener('click', (e) => {
+    if (e.target === catModal || e.target.closest('[data-close]')) return catModal.close();
+    const sk = e.target.closest('[data-skill]'); if (sk) openSkill(sk.dataset.skill);
   });
-  renderSkills();
 
   // ---------------------------------------------------------------- modal
   const modal = $('#skill-modal');
   let modalCleanup = null;
   function openSkill(id, push = true) {
     const s = SKILLS.find((x) => x.id === id); if (!s) return;
+    if (catModal.open) catModal.close();
     const c = catOf(s.cat);
     modal.style.setProperty('--c', c.color);
     $('.m-cat', modal).textContent = c.name;
@@ -204,7 +110,8 @@
     const chip = e.target.closest('[data-skill]'); if (chip) openSkill(chip.dataset.skill);
   });
   document.addEventListener('click', (e) => {
-    if (modal.contains(e.target)) return;
+    if (modal.contains(e.target) || catModal.contains(e.target)) return;
+    const cc = e.target.closest('.cat-card'); if (cc) return openCat(cc.dataset.cat);
     const sk = e.target.closest('[data-skill]'); if (sk) return openSkill(sk.dataset.skill);
     const dm = e.target.closest('[data-demo]'); if (dm) return openDemo(dm.dataset.demo);
   });
@@ -220,7 +127,7 @@
     { d: 'motion', t: 'Motion detection', p: 'My OpenCV pipeline idea running frame-by-frame in JS. Try your webcam.' },
   ];
   const tabs = $('.lab-tabs'), stage = $('.lab-demo');
-  tabs.innerHTML = LAB.map((x, i) => `<button role="tab" data-i="${i}" class="${i ? '' : 'on'}"><span>${String(i + 1).padStart(2, '0')}</span>${x.t}</button>`).join('');
+  tabs.innerHTML = LAB.map((x, i) => `<button role="tab" data-i="${i}" class="${i ? '' : 'on'}">${x.t}</button>`).join('');
   let labCleanup = null, labIdx = 0, labVisible = false;
   function mountLab(i) {
     labIdx = i;
@@ -240,9 +147,6 @@
     else if (!labVisible && labCleanup) { labCleanup(); labCleanup = null; }
   }, { rootMargin: '100px' }).observe($('.lab'));
   mountLab(0);
-
-  // ---------------------------------------------------------------- project card accents
-  $$('.project').forEach((p) => p.style.setProperty('--c', p.dataset.accent));
 
   // ---------------------------------------------------------------- terminal
   const term = $('#terminal'), out = $('.term-out'), input = $('.term-in');
