@@ -43,4 +43,12 @@
   const mo = new MutationObserver(() => { if (!target) place(active(), !lens.classList.contains('on')); });
   ul.querySelectorAll('a').forEach((a) => mo.observe(a, { attributes: true, attributeFilter: ['class'] }));
   addEventListener('resize', () => place(target || active(), true));
+  // Fade a scrolling edge only when links are hidden past it, so the first link isn't faded at rest.
+  function edges() {
+    ul.classList.toggle('fade-l', ul.scrollLeft > 1);
+    ul.classList.toggle('fade-end', ul.scrollLeft + ul.clientWidth >= ul.scrollWidth - 1);
+  }
+  ul.addEventListener('scroll', edges, { passive: true });
+  addEventListener('resize', edges);
+  edges();
 })();

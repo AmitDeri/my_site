@@ -834,6 +834,7 @@ function analyze(reviews, parsed) {    // all math lives here, not in the model
   return { share, avgStars, mismatches, topics: countBy(parsed.flatMap(p => p.topics)) };
 }`)}</pre></details>`;
     const SENT = ['positive', 'negative', 'mixed', 'neutral'];
+    const show = (o) => esc(JSON.stringify(o).replace(/,"/g, ', "').replace(/":/g, '": '));
     const valid = (x) => SENT.includes(x.sentiment) && typeof x.translation === 'string' && Array.isArray(x.topics);
     el.querySelector('.raw').innerHTML = REVIEWS.map((r) => `<li><span class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</span>${esc(r.text)}</li>`).join('');
     let running = false;
@@ -846,14 +847,14 @@ function analyze(reviews, parsed) {    // all math lives here, not in the model
         if (i >= LLM.length) return finish();
         const x = LLM[i];
         const li = document.createElement('li');
-        li.innerHTML = `<code>${esc(JSON.stringify({ lang: x.lang, sentiment: x.sentiment, topics: x.topics }))}</code>`;
+        li.innerHTML = `<code>${show({ lang: x.lang, sentiment: x.sentiment, topics: x.topics })}</code>`;
         ul.appendChild(li);
         if (!valid(x)) {
           li.classList.add('rejected');
           li.insertAdjacentHTML('beforeend', `<small class="t-err">✗ schema violation: sentiment "${esc(x.sentiment)}" → re-prompt</small>`);
           s.timeout(() => {
             const r = document.createElement('li'); r.className = 'retried';
-            r.innerHTML = `<code>${esc(JSON.stringify({ lang: RETRY.lang, sentiment: RETRY.sentiment, topics: RETRY.topics }))}</code><small class="t-ok">✓ valid on retry</small>`;
+            r.innerHTML = `<code>${show({ lang: RETRY.lang, sentiment: RETRY.sentiment, topics: RETRY.topics })}</code><small class="t-ok">✓ valid on retry</small>`;
             ul.appendChild(r); parsed.push(RETRY); i++; s.timeout(step, 280);
           }, 650);
           return;
